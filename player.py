@@ -1,20 +1,20 @@
 import pygame
 from projectile import Projectile
+import animation
 
 
 # This class represents the player
-class Player(pygame.sprite.Sprite):
+class Player(animation.AnimateSprite):
 
     # Constructor
     def __init__(self, game):
-        super().__init__()
+        super().__init__('player')
         self.game = game
         self.health = 100
         self.max_health = 100
         self.attack = 10
-        self.velocity = 1
+        self.velocity = 3
         self.all_projectiles = pygame.sprite.Group()
-        self.image = pygame.image.load("assets/player.png")
         self.rect = self.image.get_rect()
         self.rect.x = 400
         self.rect.y = 500
@@ -26,6 +26,9 @@ class Player(pygame.sprite.Sprite):
         else:
             self.game.game_over()
 
+    def update_animation(self):
+        self.animate()
+
     def update_health_bar(self, surface):
 
         # Draw the health bar's background and the health bar
@@ -35,6 +38,8 @@ class Player(pygame.sprite.Sprite):
     def throw_projectile(self):
         # Create a new instance of the Projectile class
         self.all_projectiles.add(Projectile(self))
+        self.start_animation()
+        self.game.sound_manager.play('shoot')
 
     # Method to move the character to the right
     def move_right(self):
